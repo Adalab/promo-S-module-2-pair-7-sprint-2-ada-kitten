@@ -124,13 +124,20 @@ function cancelNewKitten(event) {
 //Filtrar por descripción
 function filterKitten(event) {
     event.preventDefault();
-    const descrSearchText = input_search_desc.value;
+    const descrSearchText = input_search_desc.value.toLowerCase();
+    const raceSearchText= input_search_race.value.toLowerCase();
     listElement.innerHTML = "";
-    for (const kittenItem of kittenDataList) {
-        if (kittenItem.desc.includes(descrSearchText)) {
-            listElement.innerHTML += renderKitten(kittenItem);
-        }
-    }
+    // for (const kittenItem of kittenDataList) {
+    //     if (kittenItem.desc.includes(descrSearchText)) {
+    //         listElement.innerHTML += renderKitten(kittenItem);
+    //     }
+    // } 
+         
+    listElement.innerHTML = "";   
+    const kittenListFiltered = kittenDataList.filter((kitten) => kitten.desc.toLowerCase().includes(descrSearchText))
+        .filter((kitten) => raceSearchText === '' || kitten.race.toLowerCase() === raceSearchText );
+        
+    renderKittenList (kittenListFiltered);
 }
 
 //Mostrar el litado de gatitos en el HTML
@@ -141,9 +148,3 @@ linkNewFormElememt.addEventListener("click", handleClickNewCatForm);
 searchButton.addEventListener("click", filterKitten);
 buttonAdd.addEventListener("click", addNewKitten);
 buttonCancelForm.addEventListener("click", cancelNewKitten);
-
-
-
-
-
-

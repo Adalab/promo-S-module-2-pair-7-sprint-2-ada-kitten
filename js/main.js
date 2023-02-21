@@ -148,19 +148,40 @@ function filterKitten(event) {
 fetch(SERVER_URL, {
   method: 'GET',
   headers: {'Content-Type': 'application/json'}
-    .then((response)=>response.json())
-    .then((data)=>{
-        kittenDataList=data.result.map((kitty) => ({
-            image: kitty.image,
-            name:kitty.name,
-            desc:kitty.desc,
-            race:kitty.race,
-        }))
-    }),
-    renderKittenList(kittenDataList); //PEDIR SOPORTE XQ LOS GATOS NO SE PINTAN
 })
 
-//Mostrar el litado de gatitos en el HTML
+.then((response)=>response.json())
+.then((data)=>{
+    kittenDataList=data.results;    
+    console.log(data);
+    renderKittenList(kittenDataList);
+})
+     
+//GUARDAR GATO EN LOCAL STORAGE
+const kittenListStored = JSON.parse(localStorage.getItem('kittenDataList'));
+
+if (kittenListStored !== null) {
+  //si existe el listado de gatitos en el local storage vuelve a pintar el listado de gatitos
+  kittenDataList = kittenListStored;
+  renderKittenList();
+} else {
+  //sino existe el listado de gatitos en el local storage haz la petición al servidor
+  fetch(SERVER_URL)
+    .then((response) => response.json())
+    .then((data) => {
+      //guarda el listado obtenido en el local storage. Vuelve a pintar el listado de gatitos
+      localStorage.setItem(kittenListStored, JSON.stringify(data.results))
+      kittenListStored = data.results;
+      console.log(kittenListStored);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}
+
+//BONUS: PINTA UN NUEVO GATO EN EL SERVIDOR
+
+//Mostrar el listado de gatitos en el HTML
 // renderKittenList(kittenDataList);
 
 //Eventos
